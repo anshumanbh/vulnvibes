@@ -200,8 +200,8 @@ def analyze(
         
         if output_dir:
             click.echo(f"\n📄 Reports saved to {output_dir}:")
-            click.echo(f"   - PR-{pr_input.pull_number}_threat_model.md")
-            click.echo(f"   - PR-{pr_input.pull_number}_investigation.md")
+            click.echo(f"   - {pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_threat_model.md")
+            click.echo(f"   - {pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_investigation.md")
     
     elif result.status == "no_signal":
         click.echo("ℹ️  No security-relevant changes detected in this PR.")
@@ -210,7 +210,7 @@ def analyze(
         click.echo(f"   Duration: {result.total_time:.2f}s")
         if output_dir:
             click.echo(f"\n📄 Report saved to {output_dir}:")
-            click.echo(f"   - PR-{pr_input.pull_number}_threat_model.md")
+            click.echo(f"   - {pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_threat_model.md")
     
     elif result.status == "no_skills":
         click.echo("ℹ️  Security concerns identified but no matching skills available.")
@@ -219,7 +219,7 @@ def analyze(
         click.echo(f"   Duration: {result.total_time:.2f}s")
         if output_dir:
             click.echo(f"\n📄 Report saved to {output_dir}:")
-            click.echo(f"   - PR-{pr_input.pull_number}_threat_model.md")
+            click.echo(f"   - {pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_threat_model.md")
     
     else:
         click.echo("❌ Analysis failed!")

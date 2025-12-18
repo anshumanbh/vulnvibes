@@ -195,7 +195,7 @@ class PRTriageOrchestrator:
             # Save Stage 1 report
             if self.output_dir:
                 report = generate_threat_model_report(pr_input, stage1_result, stage1_duration)
-                self._save_report(f"PR-{pr_input.pull_number}_threat_model.md", report)
+                self._save_report(f"{pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_threat_model.md", report)
             
             # Check if we should proceed to Stage 2
             if not stage1_result.should_investigate:
@@ -239,7 +239,7 @@ class PRTriageOrchestrator:
                 report = generate_investigation_report(
                     pr_input, stage1_result, investigation_results, overall_verdict, stage2_duration
                 )
-                self._save_report(f"PR-{pr_input.pull_number}_investigation.md", report)
+                self._save_report(f"{pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_investigation.md", report)
             
             total_tool_calls = sum(r.tool_calls for r in investigation_results)
             total_cost = sum(r.cost for r in investigation_results)
