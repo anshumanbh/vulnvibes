@@ -1,0 +1,35 @@
+{
+  "hooks": {
+    "SubagentStop": [
+      {
+        "matcher": "pr-analyzer",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/validate_stage1_output.py"
+          }
+        ]
+      },
+      {
+        "matcher": "vuln-investigator",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/validate_investigation_result.py"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 .claude/hooks/save_progress.py"
+          }
+        ]
+      }
+    ]
+  }
+}

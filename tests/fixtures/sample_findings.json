@@ -1,0 +1,44 @@
+[
+  {
+    "description": "Potential SQL injection in user authentication query",
+    "file_path": "app/auth.py",
+    "line_number": 45,
+    "finding_type": "SQL_INJECTION",
+    "repository": "test-org/test-app",
+    "severity": "HIGH",
+    "code_snippet": "query = f\"SELECT * FROM users WHERE username = '{username}'\""
+  },
+  {
+    "description": "Missing authorization check on user profile access",
+    "file_path": "app/api/users.py",
+    "line_number": 123,
+    "finding_type": "IDOR",
+    "repository": "test-org/test-app",
+    "severity": "MEDIUM"
+  },
+  {
+    "description": "Unauthenticated access to admin dashboard",
+    "file_path": "app/admin/dashboard.py",
+    "line_number": 67,
+    "finding_type": "MISSING_AUTHENTICATION",
+    "repository": "test-org/test-app",
+    "severity": "CRITICAL"
+  },
+  {
+    "description": "Cross-site scripting in comment display",
+    "file_path": "app/views/comments.py",
+    "line_number": 89,
+    "finding_type": "XSS",
+    "repository": "test-org/test-app",
+    "severity": "MEDIUM"
+  },
+  {
+    "description": "Command injection in file processing",
+    "file_path": "app/utils/files.py",
+    "line_number": 34,
+    "finding_type": "COMMAND_INJECTION",
+    "repository": "test-org/test-app",
+    "severity": "CRITICAL"
+  }
+]
+

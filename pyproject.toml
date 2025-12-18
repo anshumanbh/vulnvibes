@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "vulnvibes"
+version = "0.1.0"
+description = "PR-focused security triage agent using Claude and the Claude Agent SDK"
+readme = "README.md"
+license = {text = "MIT"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Anshuman Bhartiya", email = "anshuman.bhartiya@gmail.com"}
+]
+keywords = ["security", "vulnerability", "triage", "claude", "ai", "github"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Security",
+]
+dependencies = [
+    "claude-agent-sdk>=0.1.3",
+    "httpx>=0.25.0",
+    "click>=8.0.0",
+    "python-dotenv>=1.0.0",
+    "PyYAML>=6.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "pytest-mock>=3.10.0",
+    "black>=23.0.0",
+    "ruff>=0.1.0",
+    "mypy>=1.0.0",
+]
+
+[project.scripts]
+vulnvibes = "vulnvibes.cli:cli"
+
+[project.urls]
+Homepage = "https://github.com/anshumanbh/vulnvibes"
+Repository = "https://github.com/anshumanbh/vulnvibes"
+Issues = "https://github.com/anshumanbh/vulnvibes/issues"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["vulnvibes*"]
+
+[tool.setuptools.package-data]
+vulnvibes = ["skills/**/*.md"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+testpaths = ["tests"]
+
+[tool.black]
+line-length = 100
+target-version = ["py310", "py311", "py312"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py310"
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true

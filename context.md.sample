@@ -1,0 +1,54 @@
+---
+related_repos:
+  - name: infra-ops
+    purpose: nginx configs, k8s manifests, terraform
+  - name: auth-service
+    purpose: Central authentication, JWT issuance
+  - name: api-gateway
+    purpose: Rate limiting, request routing
+ignore_vulns:
+  - CWE-916  # Plaintext passwords - tracked in JIRA-456, fixing in Q1
+  - CWE-532  # Sensitive logging - known issue in auth-service
+---
+
+# Application Architecture
+
+Microservices architecture with nginx reverse proxy handling TLS termination and rate limiting.
+
+## Authentication Flow
+
+1. User authenticates via POST /auth/login to auth-service
+2. JWT issued with claims: `user_id`, `role`, `org_id`
+3. Each downstream service validates JWT via shared `@require_auth` decorator
+4. Token refresh handled by /auth/refresh endpoint
+
+## Authorization Model
+
+- **Role-based**: admin, editor, viewer roles stored in JWT
+- **Resource ownership**: Documents have `owner_id` field, checked via `doc.owner_id == jwt.user_id`
+- **Org isolation**: All queries filtered by `org_id` from JWT
+
+## Security Controls
+
+- Rate limiting: 100 req/min per IP (nginx)
+- Auth middleware: `middleware/auth.py` - validates JWT on all non-public routes
+- Public endpoints: `/health`, `/docs/public/*`, `/auth/login`, `/auth/refresh`
+- Admin routes: `/admin/*` require `role=admin` in JWT
+
+## Infrastructure Notes
+
+- nginx config: `infra-ops/nginx/nginx.conf`
+- K8s network policies restrict inter-service traffic
+- All secrets in Vault, not in code
+
+## Known Patterns
+
+Similar endpoints like `GET /projects/{id}` use this pattern:
+```python
+     @require_auth
+     def get_project(project_id: int, user: AuthUser):
+         project = db.query(Project).filter_by(id=project_id, org_id=user.org_id).first()
+         if not project or project.owner_id != user.id:
+             raise HTTPException(403)
+         return project
+
