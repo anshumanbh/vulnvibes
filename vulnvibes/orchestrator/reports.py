@@ -257,3 +257,95 @@ def generate_investigation_report(
     ])
     
     return "\n".join(lines)
+
+
+def generate_investigation_json(
+    pr_input: PRTriageInput,
+    threat_model: ThreatModel,
+    results: List[InvestigationResult],
+    duration: float,
+) -> dict:
+    """Generate benchmarking-compatible JSON output.
+    
+    This JSON format is designed for comparing vulnvibes results against
+    expected outcomes (ground truth) for benchmarking and testing.
+    
+    Args:
+        pr_input: PR input details
+        threat_model: Threat model from Stage 1
+        results: List of investigation results from Stage 2
+        duration: Investigation duration in seconds
+        
+    Returns:
+        Dictionary matching the benchmark JSON schema
+    """
+    from datetime import timezone
+    timestamp = datetime.now(timezone.utc).isoformat()
+    
+    # Map threats to benchmark format
+    threats = []
+    for threat in threat_model.identified_threats:
+        # Find matching investigation result
+        inv_result = next(
+            (r for r in results if r.threat_id == threat.threat_id),
+            None
+        )
+        
+        # Map verdict (NO_SKILL_AVAILABLE → UNKNOWN for benchmarking)
+        verdict = "UNKNOWN"
+        if inv_result and inv_result.verdict:
+            verdict = "UNKNOWN" if inv_result.verdict == "NO_SKILL_AVAILABLE" else inv_result.verdict
+        
+        # Scale confidence from 1-10 to 0-100
+        confidence = min((inv_result.confidence_score or 5) * 10, 100) if inv_result else 50
+        
+        # Map severity (add N/A fallback)
+        severity = inv_result.risk_level if inv_result and inv_result.risk_level else "N/A"
+        
+        # Build reasoning chain with repos_analyzed
+        reasoning_chain = []
+        if inv_result and inv_result.reasoning_chain:
+            for step in inv_result.reasoning_chain:
+                reasoning_chain.append({
+                    "step": step.step,
+                    "action": step.action,
+                    "finding": step.finding,
+                    "repos_analyzed": [pr_input.repository]  # Primary repo
+                })
+        
+        threats.append({
+            "threat_id": threat.threat_id,
+            "name": threat.name or threat.description[:50],
+            "verdict": verdict,
+            "confidence": confidence,
+            "cwes": threat.cwe_ids,
+            "severity": severity,
+            "description": threat.description,
+            "reasoning_chain": reasoning_chain
+        })
+    
+    # Calculate summary
+    true_positives = sum(1 for t in threats if t["verdict"] == "TRUE_POSITIVE")
+    false_positives = sum(1 for t in threats if t["verdict"] == "FALSE_POSITIVE")
+    
+    severity_order = ["CRITICAL", "HIGH", "MEDIUM", "LOW", "INFO", "N/A"]
+    highest_severity = next(
+        (s for s in severity_order if any(t["severity"] == s for t in threats)),
+        "N/A"
+    )
+    
+    return {
+        "pr_url": pr_input.pr_url,
+        "investigation_metadata": {
+            "agent_name": "vulnvibes",
+            "timestamp": timestamp,
+            "duration_seconds": round(duration, 2),
+            "repository": pr_input.repository
+        },
+        "threats": threats,
+        "summary": {
+            "true_positives": true_positives,
+            "false_positives": false_positives,
+            "highest_severity": highest_severity
+        }
+    }

@@ -85,6 +85,7 @@ class TestIdentifiedThreat:
         """Test creating IdentifiedThreat."""
         threat = IdentifiedThreat(
             threat_id="THREAT-001",
+            name="IDOR in Document Access",
             description="Potential IDOR vulnerability",
             cwe_ids=["CWE-639", "CWE-862"],
             affected_code="src/api.py:45-60",
@@ -92,15 +93,17 @@ class TestIdentifiedThreat:
             matching_skills=["sast-authorization-testing"]
         )
         assert threat.threat_id == "THREAT-001"
+        assert threat.name == "IDOR in Document Access"
         assert len(threat.cwe_ids) == 2
         assert "CWE-639" in threat.cwe_ids
     
     def test_defaults(self):
         """Test IdentifiedThreat default values."""
         threat = IdentifiedThreat(
-            threat_id="THREAT-002",
-            description="Test threat"
+            threat_id="THREAT-002"
         )
+        assert threat.name == ""
+        assert threat.description == ""
         assert threat.cwe_ids == []
         assert threat.affected_code == ""
         assert threat.investigation_questions == []

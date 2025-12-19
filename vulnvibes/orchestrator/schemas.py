@@ -29,9 +29,13 @@ THREAT_MODEL_SCHEMA = {
                             "type": "string",
                             "description": "Unique identifier like THREAT-001"
                         },
+                        "name": {
+                            "type": "string",
+                            "description": "Short threat title (e.g., 'IDOR in Document Access')"
+                        },
                         "description": {
                             "type": "string",
-                            "description": "Clear description of the specific threat"
+                            "description": "Detailed description of the specific threat"
                         },
                         "cwe_ids": {
                             "type": "array",
@@ -53,7 +57,7 @@ THREAT_MODEL_SCHEMA = {
                             "description": "Skills to use for validating this threat"
                         }
                     },
-                    "required": ["threat_id", "description", "investigation_questions"]
+                    "required": ["threat_id", "name", "description", "investigation_questions"]
                 }
             },
             "matching_skills": {

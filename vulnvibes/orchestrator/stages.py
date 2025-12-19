@@ -95,7 +95,8 @@ If you need to understand the broader architecture, use github_list_org_repos to
     "identified_threats": [
         {{
             "threat_id": "THREAT-001",
-            "description": "Potential IDOR in GET /documents/{{doc_id}} - endpoint queries DB with user-provided ID",
+            "name": "IDOR in Document Access",
+            "description": "Potential IDOR in GET /documents/{{doc_id}} - endpoint queries DB with user-provided ID without ownership validation",
             "cwe_ids": ["CWE-639", "CWE-862"],
             "affected_code": "src/main.py:45-50 - GET /documents/{{doc_id}}",
             "investigation_questions": [

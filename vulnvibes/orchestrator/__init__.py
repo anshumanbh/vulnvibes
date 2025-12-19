@@ -15,6 +15,7 @@ Example usage:
     result = await orchestrator.analyze_pr(pr_input)
 """
 
+import json
 import shutil
 import time
 from pathlib import Path
@@ -31,7 +32,7 @@ from ..utils.logging import get_logger
 # Import from submodules
 from .schemas import THREAT_MODEL_SCHEMA, INVESTIGATION_RESULT_SCHEMA
 from .parsers import aggregate_verdicts
-from .reports import generate_threat_model_report, generate_investigation_report
+from .reports import generate_threat_model_report, generate_investigation_report, generate_investigation_json
 from .stages import run_stage1, run_stage2
 
 logger = get_logger("orchestrator")
@@ -234,12 +235,22 @@ class PRTriageOrchestrator:
             # Aggregate results
             overall_verdict = aggregate_verdicts(investigation_results)
             
-            # Save Stage 2 report
+            # Save Stage 2 reports
             if self.output_dir:
+                # Markdown report
                 report = generate_investigation_report(
                     pr_input, stage1_result, investigation_results, overall_verdict, stage2_duration
                 )
                 self._save_report(f"{pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_investigation.md", report)
+                
+                # JSON for benchmarking
+                json_output = generate_investigation_json(
+                    pr_input, stage1_result, investigation_results, stage2_duration
+                )
+                self._save_report(
+                    f"{pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_investigation.json",
+                    json.dumps(json_output, indent=2)
+                )
             
             total_tool_calls = sum(r.tool_calls for r in investigation_results)
             total_cost = sum(r.cost for r in investigation_results)

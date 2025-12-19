@@ -202,6 +202,7 @@ def analyze(
             click.echo(f"\n📄 Reports saved to {output_dir}:")
             click.echo(f"   - {pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_threat_model.md")
             click.echo(f"   - {pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_investigation.md")
+            click.echo(f"   - {pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_investigation.json")
     
     elif result.status == "no_signal":
         click.echo("ℹ️  No security-relevant changes detected in this PR.")

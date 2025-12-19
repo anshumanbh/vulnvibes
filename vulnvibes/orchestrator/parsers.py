@@ -117,6 +117,7 @@ def parse_threat_model(response: str) -> ThreatModel:
         for threat_data in identified_threats_data:
             threat = IdentifiedThreat(
                 threat_id=threat_data.get("threat_id", f"THREAT-{len(model.identified_threats)+1}"),
+                name=threat_data.get("name", ""),
                 description=threat_data.get("description", ""),
                 cwe_ids=threat_data.get("cwe_ids", []),
                 affected_code=threat_data.get("affected_code", ""),

@@ -36,7 +36,8 @@ class IdentifiedThreat:
     """A specific threat identified from the PR diff in Stage 1."""
     
     threat_id: str  # Unique ID like "THREAT-001"
-    description: str  # "Potential IDOR in GET /documents/{doc_id}"
+    name: str = ""  # Short title like "IDOR in Document Access"
+    description: str = ""  # Detailed description of the threat
     cwe_ids: List[str] = field(default_factory=list)  # ["CWE-639", "CWE-862"]
     affected_code: str = ""  # "src/main.py:45-50 - GET /documents/{doc_id}"
     investigation_questions: List[str] = field(default_factory=list)  # Questions to answer in Stage 2
