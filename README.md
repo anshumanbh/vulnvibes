@@ -149,7 +149,7 @@ vulnvibes pr analyze <PR_URL> [OPTIONS]
 - `--org`: Organization name for org-wide search
 - `--context-file`: Markdown context file with optional YAML frontmatter
 - `--output`: Output file for JSON results
-- `--output-dir`: Directory for markdown reports
+- `--output-dir`: Directory for markdown reports and benchmarking JSON
 - `--max-tool-calls`: Maximum tool calls per stage (default: 30)
 
 **Examples:**
@@ -197,6 +197,8 @@ asyncio.run(main())
 
 ## Output Structure
 
+### Python API Response
+
 ```python
 {
     "status": "completed",  # "completed", "no_signal", "no_skills", "failed"
@@ -205,7 +207,13 @@ asyncio.run(main())
     "threat_model": {
         "what_are_we_working_on": "...",  # PR summary
         "what_can_go_wrong": ["..."],     # Identified threats
-        "identified_threats": [...]        # Detailed threat objects
+        "identified_threats": [{
+            "threat_id": "THREAT-001",
+            "name": "IDOR in Document Access",  # Short title
+            "description": "GET /documents/{id} missing ownership check",
+            "cwe_ids": ["CWE-639", "CWE-862"],
+            "investigation_questions": [...]
+        }]
     },
     
     "investigation_results": [{
@@ -219,6 +227,42 @@ asyncio.run(main())
     "total_tool_calls": 45,
     "total_cost": 0.75,
     "total_time": 120.5
+}
+```
+
+### Benchmarking JSON Output
+
+When using `--output-dir`, a benchmarking JSON file is generated alongside the markdown reports:
+
+- `{owner}_{repo}_PR-{number}_threat_model.md`
+- `{owner}_{repo}_PR-{number}_investigation.md`
+- `{owner}_{repo}_PR-{number}_investigation.json` (for benchmarking)
+
+The JSON file follows a schema designed for comparing results against expected outcomes:
+
+```json
+{
+  "pr_url": "https://github.com/org/repo/pull/123",
+  "investigation_metadata": {
+    "agent_name": "vulnvibes",
+    "timestamp": "2025-12-19T10:30:00Z",
+    "duration_seconds": 45.5,
+    "repository": "org/repo"
+  },
+  "threats": [{
+    "threat_id": "THREAT-001",
+    "name": "IDOR in Document Access",
+    "verdict": "TRUE_POSITIVE",
+    "confidence": 80,
+    "cwes": ["CWE-639"],
+    "severity": "HIGH",
+    "reasoning_chain": [...]
+  }],
+  "summary": {
+    "true_positives": 1,
+    "false_positives": 0,
+    "highest_severity": "HIGH"
+  }
 }
 ```
 
