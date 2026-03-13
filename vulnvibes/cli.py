@@ -69,7 +69,7 @@ def pr():
 @pr.command()
 @click.argument('pr_url')
 @click.option('--github-token', envvar='GITHUB_TOKEN', required=True, help='GitHub personal access token')
-@click.option('--anthropic-api-key', envvar='ANTHROPIC_API_KEY', required=True, help='Anthropic API key')
+@click.option('--anthropic-api-key', envvar='ANTHROPIC_API_KEY', required=False, default='', help='Anthropic API key (optional if Claude OAuth is configured)')
 @click.option('--model', default=None, help='Model to use (sonnet, opus, haiku, or full model ID)')
 @click.option('--org', default=None, help='Organization name for org-wide search (defaults to repo owner)')
 @click.option('--context-file', type=click.Path(exists=True), help='Markdown context file with optional YAML frontmatter')
