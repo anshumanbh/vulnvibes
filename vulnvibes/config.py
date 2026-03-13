@@ -89,9 +89,7 @@ class Config:
         if not github_token:
             raise ValueError("GITHUB_TOKEN environment variable is required")
         
-        anthropic_api_key = os.getenv("ANTHROPIC_API_KEY")
-        if not anthropic_api_key:
-            raise ValueError("ANTHROPIC_API_KEY environment variable is required")
+        anthropic_api_key = os.getenv("ANTHROPIC_API_KEY", "")
         
         return cls(
             github_token=github_token,
