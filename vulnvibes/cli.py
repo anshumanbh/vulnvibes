@@ -74,7 +74,7 @@ def pr():
 @click.option('--org', default=None, help='Organization name for org-wide search (defaults to repo owner)')
 @click.option('--context-file', type=click.Path(exists=True), help='Markdown context file with optional YAML frontmatter')
 @click.option('--output', type=click.Path(), help='Output file for JSON results (default: stdout)')
-@click.option('--output-dir', type=click.Path(), help='Directory for markdown reports (threat_model.md, investigation.md)')
+@click.option('--output-dir', type=click.Path(), help='Directory for reports (threat_model.md, investigation.md)')
 @click.option('--max-tool-calls', type=int, default=30, help='Maximum tool calls per stage')
 def analyze(
     pr_url: str,
@@ -202,7 +202,6 @@ def analyze(
             click.echo(f"\n📄 Reports saved to {output_dir}:")
             click.echo(f"   - {pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_threat_model.md")
             click.echo(f"   - {pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_investigation.md")
-            click.echo(f"   - {pr_input.owner}_{pr_input.repo}_PR-{pr_input.pull_number}_investigation.json")
     
     elif result.status == "no_signal":
         click.echo("ℹ️  No security-relevant changes detected in this PR.")
