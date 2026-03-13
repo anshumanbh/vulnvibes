@@ -1,5 +1,7 @@
 """Tests for agent definitions module."""
 
+import inspect
+
 import pytest
 
 from vulnvibes.agents.definitions import (
@@ -8,6 +10,7 @@ from vulnvibes.agents.definitions import (
     get_available_skills,
     AGENT_PROMPTS,
 )
+from vulnvibes.orchestrator import stages as stages_module
 from vulnvibes.skill_registry import clear_cache
 
 
@@ -33,10 +36,17 @@ class TestBuildPrAnalyzerPrompt:
     def test_includes_skill_matching_rules(self):
         """Test that prompt includes skill matching guidance."""
         prompt = _build_pr_analyzer_prompt()
-        
+
         assert "Match by CWE" in prompt
         assert "No matching skill?" in prompt
         assert "matching_skills: []" in prompt
+
+    def test_includes_consistency_guidelines(self):
+        """Test that prompt includes consistency guidelines referencing qualification rules."""
+        prompt = _build_pr_analyzer_prompt()
+
+        assert "Consistency Guidelines" in prompt
+        assert "Threat Qualification Rules" in prompt
     
     def test_includes_new_skills(self):
         """Test that prompt includes newly added skills."""
@@ -125,6 +135,32 @@ class TestCreateAgentDefinitions:
         assert "Searching Code" in prompt
         assert "Comparing Changes" in prompt
         assert "Organization Discovery" in prompt
+
+
+class TestThreatQualificationRules:
+    """Tests for threat qualification rules in stage1 task prompt."""
+
+    def test_stage1_contains_qualification_filters(self):
+        """Test that run_stage1 source contains all four qualification filters."""
+        source = inspect.getsource(stages_module.run_stage1)
+
+        assert "Filter 1: PR-Specific" in source
+        assert "Filter 2: Application Vulnerabilities Only" in source
+        assert "Filter 3: Data Exposure Check" in source
+        assert "Filter 4: Actionable via Code Changes" in source
+
+    def test_stage1_contains_negative_examples(self):
+        """Test that run_stage1 source contains negative examples."""
+        source = inspect.getsource(stages_module.run_stage1)
+
+        assert "What is NOT a Threat" in source
+        assert "Missing rate limiting" in source
+
+    def test_stage1_contains_quality_guidance(self):
+        """Test that run_stage1 source contains quality-over-quantity guidance."""
+        source = inspect.getsource(stages_module.run_stage1)
+
+        assert "Quality Over Quantity" in source
 
 
 class TestAgentPrompts:

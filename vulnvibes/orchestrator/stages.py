@@ -85,6 +85,44 @@ If you need to understand the broader architecture, use github_list_org_repos to
 - Each threat must have specific investigation questions
 - Questions should guide Stage 2 to check for security controls at ALL layers
 
+## THREAT QUALIFICATION RULES (Apply Before Adding to identified_threats)
+
+Before adding ANY threat to identified_threats, verify it passes ALL these filters:
+
+### Filter 1: PR-Specific
+- The threat MUST be introduced by THIS PR's changes
+- Do NOT report pre-existing architectural concerns or general security improvements
+
+### Filter 2: Application Vulnerabilities Only
+- Report code-level security flaws that can be exploited
+- Do NOT report infrastructure improvement suggestions:
+  - Rate limiting configuration
+  - CORS headers
+  - Security headers (X-Frame-Options, CSP, etc.)
+  - Nginx/reverse proxy hardening
+  - Logging improvements
+
+### Filter 3: Data Exposure Check
+- Before flagging "information disclosure", verify the data isn't already publicly accessible
+- If data is available through another public endpoint, it is NOT a new disclosure threat
+- Example: If /documents/public lists documents, a /stats endpoint showing document count is NOT new disclosure
+
+### Filter 4: Actionable via Code Changes
+- The threat must be addressable through code changes in THIS PR
+- Configuration/deployment concerns that require infrastructure changes are NOT threats
+
+### What is NOT a Threat (Examples - Do NOT Report These)
+- "Missing rate limiting" - Infrastructure concern, not code vulnerability
+- "Stats endpoint exposes document count" - If /documents/public already exposes docs, count is not new disclosure  
+- "Missing security headers" - Deployment config, not application vulnerability
+- "Database credentials could leak if misconfigured" - Speculative, not PR-specific
+- "No input validation on internal fields" - If field is not user-controlled, not a threat
+
+### Quality Over Quantity
+- When in doubt, do NOT add to identified_threats
+- Fewer high-confidence threats are better than many uncertain threats
+- Focus on CONCRETE, SPECIFIC threats with clear evidence in the PR diff
+
 ## Available Skills (dynamically loaded from .claude/skills/)
 {stage1_skill_table}
 

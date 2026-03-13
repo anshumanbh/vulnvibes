@@ -21,7 +21,7 @@ THREAT_MODEL_SCHEMA = {
             },
             "identified_threats": {
                 "type": "array",
-                "description": "Specific threats identified from the PR diff with investigation questions",
+                "description": "Specific threats introduced by this PR that passed qualification filters",
                 "items": {
                     "type": "object",
                     "properties": {

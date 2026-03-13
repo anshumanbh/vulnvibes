@@ -56,6 +56,11 @@ Also identify security issues NOT in the table above, including but not limited 
 
 For these, set `matching_skills: []` and explain in the rationale why investigation is still warranted.
 
+## Consistency Guidelines (IMPORTANT)
+
+Apply the Threat Qualification Rules provided in the task strictly before adding any threat.
+Focus on CONCRETE, SPECIFIC threats with clear evidence in the PR diff. Quality over quantity.
+
 ## Output Format
 Produce a structured threat model with:
 - `should_investigate`: true/false
