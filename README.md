@@ -121,16 +121,16 @@ Skills are bundled with the package and mapped to CWE coverage:
 
 | Skill | CWE Coverage |
 |-------|--------------|
-| sast-injection-testing | CWE-89, CWE-78, CWE-79, CWE-94 |
-| sast-authentication-testing | CWE-287, CWE-306, CWE-384, CWE-613 |
-| sast-authorization-testing | CWE-862, CWE-863, CWE-639 |
-| sast-cors-testing | CWE-942, CWE-346, CWE-1021 |
-| sast-ssrf-testing | CWE-918, CWE-441, CWE-611 |
-| sast-file-security-testing | CWE-434, CWE-73, CWE-427 |
+| sast-authentication-testing | CWE-287, CWE-306, CWE-384, CWE-521, CWE-613 |
+| sast-authorization-testing | CWE-269, CWE-284, CWE-639, CWE-862, CWE-863 |
+| sast-browser-security-testing | CWE-346, CWE-352, CWE-942, CWE-1021 |
+| sast-cryptography-testing | CWE-321, CWE-326, CWE-327, CWE-328, CWE-798 |
+| sast-data-exposure-testing | CWE-200, CWE-209, CWE-359, CWE-532, CWE-615 |
 | sast-deserialization-testing | CWE-502, CWE-915 |
-| sast-security-misconfiguration-testing | CWE-16, CWE-1188, CWE-276 |
-| sast-cryptographic-failures-testing | CWE-327, CWE-328, CWE-330 |
-| browser-security-testing | CWE-79, CWE-352, CWE-1021 |
+| sast-file-security-testing | CWE-73, CWE-427, CWE-434 |
+| sast-injection-testing | CWE-22, CWE-78, CWE-79, CWE-89, CWE-94 |
+| sast-security-misconfiguration-testing | CWE-16, CWE-276, CWE-1188 |
+| sast-ssrf-testing | CWE-441, CWE-611, CWE-918 |
 
 ## CLI Reference
 
@@ -235,7 +235,7 @@ asyncio.run(main())
 ### Environment Variables
 
 - `GITHUB_TOKEN`: GitHub personal access token (required)
-- `ANTHROPIC_API_KEY`: Anthropic API key (required)
+- `ANTHROPIC_API_KEY`: Anthropic API key (optional if Claude OAuth is configured)
 - `VULNTRIAGE_PR_ANALYZER_MODEL`: Override model for pr-analyzer
 - `VULNTRIAGE_VULN_INVESTIGATOR_MODEL`: Override model for vuln-investigator
 
