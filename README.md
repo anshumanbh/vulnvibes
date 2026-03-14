@@ -2,7 +2,7 @@
 
 An autonomous AI agent for security vulnerability triage of GitHub Pull Requests using the Claude Agent SDK. Automatically performs threat modeling on PR changes and investigates potential vulnerabilities with skill-based analysis.
 
-**Join our Discord** to follow the journey and connect with the community: [discord.gg/9cYqTBdC9h](https://discord.gg/9cYqTBdC9h)
+**Join our Discord** to follow the journey and connect with the community: [discord.gg/2hWGpZz3z](https://discord.gg/2hWGpZz3z)
 
 ## Features
 
